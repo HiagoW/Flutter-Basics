@@ -6,6 +6,7 @@ class Task extends StatefulWidget {
   final String nome;
   final String foto;
   final int dificuldade;
+  int maestria = 0;
 
   Task(this.nome, this.foto, this.dificuldade, {Key? key})
       : super(key: key);
@@ -17,7 +18,6 @@ class Task extends StatefulWidget {
 }
 
 class _TaskState extends State<Task> {
-  int maestria = 0;
   var maestriaCores = {0: Colors.blue, 1: Colors.green, 2: Colors.purple};
 
   bool assertOrNetwork() {
@@ -36,7 +36,7 @@ class _TaskState extends State<Task> {
           Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
-                color: maestriaCores[maestria]),
+                color: maestriaCores[widget.maestria]),
             height: 140,
           ),
           Column(
@@ -88,10 +88,10 @@ class _TaskState extends State<Task> {
                       child: ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              if (maestria < 2 &&
+                              if (widget.maestria < 2 &&
                                   (widget.nivel / widget.dificuldade) / 10 == 1) {
                                 widget.nivel = 0;
-                                maestria++;
+                                widget.maestria++;
                               } else {
                                 widget.nivel++;
                               }
