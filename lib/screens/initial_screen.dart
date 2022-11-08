@@ -15,6 +15,10 @@ class InitialScreen extends StatefulWidget {
 class _InitialScreenState extends State<InitialScreen> {
   int level = 0;
 
+  void callbackSetState() {
+    setState(() {});
+  }
+
   void updateLevel() {
     level = TaskInherited.of(context)
         .taskList
@@ -89,6 +93,7 @@ class _InitialScreenState extends State<InitialScreen> {
                         itemCount: items.length,
                         itemBuilder: (BuildContext context, int index) {
                           final Task tarefa = items[index];
+                          tarefa.callbackSetState = callbackSetState;
                           return tarefa;
                         });
                   }
@@ -117,9 +122,12 @@ class _InitialScreenState extends State<InitialScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (contextNew) => FormScreen(taskContext: context)));
+            context,
+            MaterialPageRoute(
+                builder: (contextNew) => FormScreen(taskContext: context)),
+          ).then((value) => setState(() {
+                print('Recarregando a tela inicial');
+              }));
         },
         child: const Icon(Icons.add),
       ),

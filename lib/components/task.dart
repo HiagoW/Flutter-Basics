@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nosso_primeiro_projeto/data/task_dao.dart';
 
 import 'difficulty.dart';
 
@@ -7,9 +8,9 @@ class Task extends StatefulWidget {
   final String foto;
   final int dificuldade;
   int maestria = 0;
+  Function? callbackSetState;
 
-  Task(this.nome, this.foto, this.dificuldade, {Key? key})
-      : super(key: key);
+  Task(this.nome, this.foto, this.dificuldade, {this.callbackSetState, Key? key}) : super(key: key);
 
   int nivel = 0;
 
@@ -86,10 +87,36 @@ class _TaskState extends State<Task> {
                       height: 52,
                       width: 52,
                       child: ElevatedButton(
+                          onLongPress: () => showDialog(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                    title: Row(children: [
+                                      Text('Deletar'),
+                                      Icon(Icons.delete)
+                                    ]),
+                                    content: Text(
+                                        'Certeza que deseja deletar essa tarefa?'),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'Cancel'),
+                                          child: const Text('Cancel')),
+                                      TextButton(
+                                          onPressed: () => {
+                                                TaskDao().delete(widget.nome),
+                                                if (widget.callbackSetState != null && widget.callbackSetState is Function) {
+                                                  widget.callbackSetState!()
+                                                },
+                                                Navigator.pop(context, 'OK')
+                                              },
+                                          child: const Text('OK')),
+                                    ],
+                                  )),
                           onPressed: () {
                             setState(() {
                               if (widget.maestria < 2 &&
-                                  (widget.nivel / widget.dificuldade) / 10 == 1) {
+                                  (widget.nivel / widget.dificuldade) / 10 ==
+                                      1) {
                                 widget.nivel = 0;
                                 widget.maestria++;
                               } else {
