@@ -19,11 +19,10 @@ class _InitialScreenState extends State<InitialScreen> {
     setState(() {});
   }
 
-  void updateLevel() {
-    level = TaskInherited.of(context)
-        .taskList
-        .map((task) => task.dificuldade * task.maestria)
-        .reduce((a, b) => a + b);
+  Future<void> updateLevel() async {
+    List<Task> tasks = await TaskDao().findAll();
+    level = tasks.map((task) => task.dificuldade * task.maestria)
+    .reduce((a, b) => a + b);
   }
 
   @override
@@ -39,9 +38,7 @@ class _InitialScreenState extends State<InitialScreen> {
                   const Text('Tarefas'),
                   IconButton(
                       onPressed: () {
-                        setState(() {
-                          updateLevel();
-                        });
+                        updateLevel().whenComplete(() => setState((){}));
                       },
                       icon: const Icon(Icons.refresh))
                 ],

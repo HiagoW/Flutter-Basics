@@ -9,10 +9,9 @@ class Task extends StatefulWidget {
   final int dificuldade;
   int maestria = 0;
   Function? callbackSetState;
-
-  Task(this.nome, this.foto, this.dificuldade, {this.callbackSetState, Key? key}) : super(key: key);
-
   int nivel = 0;
+
+  Task(this.nome, this.foto, this.dificuldade, {this.nivel = 0, this.maestria = 0, this.callbackSetState, Key? key}) : super(key: key);
 
   @override
   State<Task> createState() => _TaskState();
@@ -122,6 +121,7 @@ class _TaskState extends State<Task> {
                               } else {
                                 widget.nivel++;
                               }
+                              TaskDao().saveAsync(widget);
                             });
                           },
                           child: Column(
